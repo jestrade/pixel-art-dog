@@ -4,14 +4,15 @@ import { type Ctx, ellipse, px } from './draw'
 import type { Actor } from './drawHouse'
 
 const D = {
-  steel: '#5f6d86',
-  steelDark: '#475369',
-  tan: '#d09a58',
-  tanDark: '#a8733a',
-  tanLight: '#e8bb7c',
+  // Cream coat from the reference photo: sandy back and ears, lighter face and chest, apricot paws.
+  steel: '#e0c498',
+  steelDark: '#c4a074',
+  tan: '#ecd3a8',
+  tanDark: '#c9a06c',
+  tanLight: '#f7e9cc',
   black: '#1a1a22',
   bow: '#d9433f',
-  mouth: '#7a2a38',
+  mouth: '#e0688c',
   white: '#fbf8f0',
   shadow: 'rgba(40, 24, 10, 0.3)',
 }
@@ -31,7 +32,7 @@ interface Pose {
   mouthOpen: boolean
 }
 
-/** Yorkshire Terrier: steel-blue coat, tan face and legs, red hair bow. */
+/** Small cream-coated terrier with pink tongue and a red hair bow. */
 export function dogActor(dog: Dog): Actor {
   const action = dog.action
   const elapsed = action?.elapsed ?? 0
