@@ -1,4 +1,4 @@
-import type { FloorStyle, Rect, Room } from '../game/types'
+import type { FloorStyle, Rect, Room, WallStyle } from '../game/types'
 import { type Ctx, clipped, px } from './draw'
 import { hash } from './noise'
 import { C } from './palette'
@@ -7,9 +7,18 @@ import { C } from './palette'
 export function drawFloor(c: Ctx, style: FloorStyle, area: Rect): void {
   clipped(c, area, () => {
     if (style === 'wood') drawWood(c, area)
-    else if (style === 'tile') drawTile(c, area)
+    else if (style === 'tile') drawTile(c, area, C.tileA, C.tileB, C.tileGrout)
+    else if (style === 'bathTile') drawTile(c, area, C.bathTileA, C.bathTileB, C.bathTileGrout)
     else drawCarpet(c, area)
   })
+}
+
+const WALL_PAINT: Record<WallStyle, [paint: string, dark: string]> = {
+  green: [C.wallGreen, C.wallGreenDark],
+  blue: [C.wallBlue, C.wallBlueDark],
+  cream: [C.wallCream, C.wallCreamDark],
+  teal: [C.wallTeal, C.wallTealDark],
+  rose: [C.wallRose, C.wallRoseDark],
 }
 
 function drawWood(c: Ctx, area: Rect): void {
@@ -32,13 +41,13 @@ function drawWood(c: Ctx, area: Rect): void {
   }
 }
 
-function drawTile(c: Ctx, area: Rect): void {
+function drawTile(c: Ctx, area: Rect, colorA: string, colorB: string, grout: string): void {
   const size = 8
   for (let y = Math.floor(area.y / size) * size; y < area.y + area.h; y += size) {
     for (let x = Math.floor(area.x / size) * size; x < area.x + area.w; x += size) {
-      px(c, ((x + y) / size) % 2 === 0 ? C.tileA : C.tileB, x, y, size, size)
-      px(c, C.tileGrout, x, y, size, 1)
-      px(c, C.tileGrout, x, y, 1, size)
+      px(c, ((x + y) / size) % 2 === 0 ? colorA : colorB, x, y, size, size)
+      px(c, grout, x, y, size, 1)
+      px(c, grout, x, y, 1, size)
     }
   }
 }
@@ -56,8 +65,7 @@ function drawCarpet(c: Ctx, area: Rect): void {
 export function drawWall(c: Ctx, room: Room): void {
   const { x, y, w } = room.bounds
   const h = room.wallHeight
-  const paint = room.wallStyle === 'green' ? C.wallGreen : C.wallBlue
-  const paintDark = room.wallStyle === 'green' ? C.wallGreenDark : C.wallBlueDark
+  const [paint, paintDark] = WALL_PAINT[room.wallStyle]
   const wainscotH = 14
 
   px(c, paint, x, y, w, h)

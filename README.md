@@ -2,11 +2,11 @@
 
 A pixel-art browser game where you play with a Yorkshire Terrier. Walk the dog around a small house with three rooms, and make it jump, bark, and more.
 
-> Status: early. You can walk the Yorkie around the three-room house with the keyboard, and it collides with walls and furniture. Jump, bark, and the action buttons are not built yet.
+> Status: early. You can walk the Yorkie around the seven-room house with the keyboard, and it collides with walls and furniture. Jump, bark, and the action buttons are not built yet.
 
 ## Concept
 
-- Top-down pixel-art house with **3 rooms** connected by doorways.
+- Top-down pixel-art, single-level house with **7 rooms** connected by doorways: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, and entry.
 - You control a **Yorkie** with the keyboard.
 - **Collisions** keep the dog out of walls and furniture, so nothing overlaps.
 - On-screen **action buttons** trigger pet actions: jump, bark, and others to come.
@@ -42,7 +42,7 @@ src/
 ## Roadmap
 
 1. ~~Project scaffold (Vite, React, TypeScript, tests).~~
-2. ~~House layout with 3 rooms, walls, doorways, furniture, and collision data.~~
+2. ~~House layout with 7 rooms, walls, doorways, furniture, and collision data.~~
 3. ~~Game loop, Yorkie sprite, and keyboard-driven movement with collisions.~~
 4. Jump and bark animations.
 5. Action buttons wired to the same actions as the keyboard.

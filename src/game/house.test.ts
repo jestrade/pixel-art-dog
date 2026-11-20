@@ -7,8 +7,16 @@ const DOG = { w: 12, h: 8 }
 const STEP = 4
 
 describe('house layout', () => {
-  it('has three rooms', () => {
-    expect(house.rooms).toHaveLength(3)
+  it('has seven rooms', () => {
+    expect(house.rooms.map((r) => r.id)).toEqual([
+      'master',
+      'bathroom',
+      'kids',
+      'living',
+      'kitchen',
+      'office',
+      'entry',
+    ])
   })
 
   it('keeps solid furniture from overlapping each other', () => {
@@ -41,7 +49,7 @@ describe('collisions', () => {
 
   it('blocks walls, outside space and furniture', () => {
     expect(canOccupy(house, { x: 100, y: 150, ...DOG })).toBe(false) // living room back wall
-    expect(canOccupy(house, { x: 300, y: 100, ...DOG })).toBe(false) // outside the house
+    expect(canOccupy(house, { x: 500, y: 400, ...DOG })).toBe(false) // outside the house
     const sofa = house.furniture.find((f) => f.id === 'sofa')!.footprint as Rect
     expect(canOccupy(house, { x: sofa.x + 4, y: sofa.y + 4, ...DOG })).toBe(false)
   })

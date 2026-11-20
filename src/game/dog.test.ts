@@ -57,14 +57,13 @@ describe('stepDog', () => {
     expect(dog.x).toBeGreaterThan(start.x)
   })
 
-  it('walks from the living room into the bedroom and the entry', () => {
-    // Bedroom doorway is at tile x 1..4, entry doorway at tile y 14..17.
-    const toDoor = walk(createDog(24, 256), { x: 0, y: -1 }, 3)
-    expect(toDoor.y).toBeLessThan(144) // above the living room wall line, so inside the bedroom
+  it('walks from the living room into the master bedroom and the kitchen', () => {
+    // Bedroom doorway is at tile x 1..4; kitchen doorway is at tile y 16..19 on the x = 16 partition.
+    const toBedroom = walk(createDog(24, 256), { x: 0, y: -1 }, 3)
+    expect(toBedroom.y).toBeLessThan(144) // above the living room wall line, so inside the bedroom
 
-    const entryStart = createDog(house.dogSpawn.x, 15 * 16 + 4)
-    const east = walk(entryStart, { x: 1, y: 0 }, 6)
-    expect(east.x).toBeGreaterThan(17 * 16) // past the divider, inside the entry
+    const toKitchen = walk(createDog(14 * 16, 17.5 * 16), { x: 1, y: 0 }, 2)
+    expect(toKitchen.x).toBeGreaterThan(17 * 16) // past the partition, inside the kitchen
   })
 })
 

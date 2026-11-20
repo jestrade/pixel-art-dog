@@ -35,42 +35,59 @@ function place(
   }
 }
 
+/**
+ * Floor plan (tiles, 34 x 32). Every room has a 4-tile back wall at its top.
+ *
+ *   y0   | Master bedroom | Bathroom | Kids' bedroom |
+ *   y9   | Living room    | Kitchen and dining      |
+ *   y23  | Office  | Entry |
+ *
+ * Rooms in a row are separated by one-tile partitions; rooms in different rows share a wall,
+ * and doorways cut through it.
+ */
 const WALL_HEIGHT = t(4)
 
+const room = (
+  id: string,
+  name: string,
+  bounds: Rect,
+  floorStyle: Room['floorStyle'],
+  wallStyle: Room['wallStyle'],
+): Room => ({ id, name, bounds, wallHeight: WALL_HEIGHT, floorStyle, wallStyle })
+
 const rooms: Room[] = [
-  {
-    id: 'bedroom',
-    name: 'Bedroom',
-    bounds: rect(0, 0, 16, 9),
-    wallHeight: WALL_HEIGHT,
-    floorStyle: 'carpet',
-    wallStyle: 'blue',
-  },
-  {
-    id: 'living',
-    name: 'Living room',
-    bounds: rect(0, 9, 16, 14),
-    wallHeight: WALL_HEIGHT,
-    floorStyle: 'wood',
-    wallStyle: 'green',
-  },
-  {
-    id: 'entry',
-    name: 'Entry',
-    bounds: rect(17, 9, 7, 8),
-    wallHeight: WALL_HEIGHT,
-    floorStyle: 'tile',
-    wallStyle: 'green',
-  },
+  room('master', 'Master bedroom', rect(0, 0, 12, 9), 'carpet', 'blue'),
+  room('bathroom', 'Bathroom', rect(13, 0, 9, 9), 'bathTile', 'teal'),
+  room('kids', "Kids' bedroom", rect(23, 0, 11, 9), 'carpet', 'rose'),
+  room('living', 'Living room', rect(0, 9, 16, 14), 'wood', 'green'),
+  room('kitchen', 'Kitchen', rect(17, 9, 17, 14), 'tile', 'cream'),
+  room('office', 'Office', rect(0, 23, 13, 9), 'wood', 'blue'),
+  room('entry', 'Entry', rect(13, 23, 10, 9), 'wood', 'green'),
 ]
 
 const furniture: Furniture[] = [
-  // Bedroom
-  place('window', 'window', 'wall', 5, 1, 2.5, 2.2),
-  place('wardrobe', 'wardrobe', 'object', 1, 0.8, 3, 4.2, 1.2),
-  place('bedroom-rug', 'rug', 'floor', 4.5, 6, 5, 2.5),
-  place('bed', 'bed', 'object', 8, 2.5, 5, 5, 3.4),
-  place('nightstand', 'nightstand', 'object', 13.3, 4.2, 1.5, 1.5, 1.5),
+  // Master bedroom
+  place('master-window', 'window', 'wall', 4.5, 1, 2.5, 2.2),
+  place('master-wardrobe', 'wardrobe', 'object', 0.8, 0.8, 3, 4.2, 1.2),
+  place('master-rug', 'rug', 'floor', 1.5, 6.2, 4, 2.4),
+  place('master-nightstand', 'nightstand', 'object', 4.8, 4.2, 1.5, 1.5, 1.5),
+  place('master-bed', 'bed', 'object', 6.5, 2.5, 5, 5, 3.4),
+
+  // Bathroom
+  place('bath-window', 'window', 'wall', 15.5, 0.8, 2.2, 1.9),
+  place('bath-tub', 'bathtub', 'object', 13.5, 2.2, 4.5, 2.8, 1.4),
+  place('bath-toilet', 'toilet', 'object', 18.4, 2.2, 1.5, 2.8, 1.2),
+  place('bath-vanity', 'vanity', 'object', 20.1, 1.8, 1.9, 3.2, 1.2),
+  place('bath-mat', 'doormat', 'floor', 15, 6.2, 3.5, 1.8),
+
+  // Kids' bedroom
+  place('kids-window', 'window', 'wall', 28, 1, 2.5, 2.2),
+  place('kids-bed', 'singleBed', 'object', 24, 2.5, 3.5, 5, 3.4),
+  place('kids-nightstand', 'nightstand', 'object', 27.8, 4.2, 1.5, 1.5, 1.5),
+  place('kids-desk', 'desk', 'object', 30.2, 2.2, 3.4, 3, 1.4),
+  place('kids-chair', 'chairBack', 'object', 31.3, 4.8, 1.4, 2, 1),
+  place('kids-rug', 'rug', 'floor', 26, 6.2, 5, 2.2),
+  place('kids-plant', 'plant', 'object', 32.2, 7, 1.8, 2, 1),
 
   // Living room
   place('frame-1', 'frame', 'wall', 8.8, 9.2, 1.2, 1.4),
@@ -85,25 +102,60 @@ const furniture: Furniture[] = [
   place('coffee-table', 'coffeeTable', 'object', 7, 16.5, 4, 2.5, 2),
   place('plant-left', 'plant', 'object', 2.2, 19.5, 3, 3, 1.2),
   place('tv', 'tvStand', 'object', 6, 19.5, 5, 3, 1.2),
-  place('plant-right', 'plant', 'object', 12.3, 19.5, 3, 3, 1.2),
+  place('plant-right', 'plant', 'object', 13.2, 14.2, 2.4, 2.4, 1),
+
+  // Kitchen and dining area
+  place('kitchen-window-1', 'window', 'wall', 21, 9.2, 2.5, 2),
+  place('kitchen-window-2', 'window', 'wall', 27.8, 9.2, 2.2, 2),
+  place('fridge', 'fridge', 'object', 17.6, 9.6, 2, 4.2, 1.4),
+  place('counter-1', 'counter', 'object', 19.6, 10.8, 3, 3, 1.2),
+  place('sink', 'sink', 'object', 22.6, 10.8, 3, 3, 1.2),
+  place('stove', 'stove', 'object', 25.6, 10.8, 2, 3, 1.2),
+  place('counter-2', 'counter', 'object', 27.6, 10.8, 2.4, 3, 1.2),
+  place('dining-rug', 'rug', 'floor', 20.5, 16.5, 8, 5.5),
+  place('chair-top-1', 'chair', 'object', 23, 16.2, 1.2, 1.4, 0.8),
+  place('chair-top-2', 'chair', 'object', 25.2, 16.2, 1.2, 1.4, 0.8),
+  place('dining-table', 'diningTable', 'object', 22, 17, 5, 3, 2),
+  place('chair-bottom-1', 'chairBack', 'object', 23, 19.8, 1.2, 1.4, 0.8),
+  place('chair-bottom-2', 'chairBack', 'object', 25.2, 19.8, 1.2, 1.4, 0.8),
+  place('kitchen-plant', 'plant', 'object', 31.5, 18, 2.2, 2.6, 1),
+
+  // Office
+  place('office-frame', 'frame', 'wall', 7.4, 23.4, 1.1, 1.4),
+  place('office-bookshelf', 'bookshelf', 'object', 4.4, 23.2, 2, 4.5, 1),
+  place('office-desk', 'desk', 'object', 6.4, 24.6, 4, 3, 1.4),
+  place('office-lamp', 'floorLamp', 'object', 10.8, 23.4, 1.1, 3.7, 0.8),
+  place('office-chair', 'chairBack', 'object', 7.6, 27.4, 1.4, 2, 1),
+  place('office-rug', 'rug', 'floor', 3.5, 29, 6, 2.4),
+  place('office-plant', 'plant', 'object', 0.6, 29.4, 2, 2.4, 1),
 
   // Entry
-  place('coat-hook', 'coatHook', 'wall', 19, 10, 1, 1.7),
-  place('doormat', 'doormat', 'floor', 18.5, 14.8, 4.5, 1.6),
-  place('boots', 'boots', 'object', 21.5, 15.3, 1.5, 1, 0.7),
+  place('front-door', 'frontDoor', 'wall', 16.4, 23.2, 2.2, 3.8),
+  place('coat-hook', 'coatHook', 'wall', 22, 24, 1, 1.7),
+  place('doormat', 'doormat', 'floor', 16.2, 27.3, 2.6, 1.4),
+  place('boots', 'boots', 'object', 14, 28.8, 1.5, 1, 0.7),
+  place('entry-plant', 'plant', 'object', 20.9, 28.7, 1.9, 2.3, 1),
 ]
 
 export const house: House = {
-  width: t(24),
-  height: t(23),
+  width: t(34),
+  height: t(32),
   rooms,
-  // Divider between the living room and the entry, above the doorway.
-  walls: [rect(16, 9, 1, 5)],
+  // Partitions between neighbouring rooms in a row, each stopping above its doorway.
+  walls: [rect(12, 0, 1, 6), rect(22, 0, 1, 6), rect(16, 9, 1, 7), rect(16, 19, 1, 4)],
   doorways: [
-    // Bedroom <-> living room
+    // Master bedroom <-> bathroom, bathroom <-> kids' bedroom
+    rect(12, 6, 1, 3),
+    rect(22, 6, 1, 3),
+    // Living room <-> kitchen
+    rect(16, 16, 1, 3),
+    // Master bedroom <-> living room, kids' bedroom <-> kitchen
     rect(1, 9, 3, 4),
-    // Living room <-> entry
-    rect(16, 14, 1, 3),
+    rect(30.5, 9, 2.8, 4),
+    // Office <-> living room, entry <-> living room, entry <-> kitchen
+    rect(1, 23, 3, 4),
+    rect(13, 23, 3, 4),
+    rect(19, 23, 3, 4),
   ],
   furniture,
   dogSpawn: { x: t(1.5), y: t(16) },

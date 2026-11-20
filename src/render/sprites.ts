@@ -245,6 +245,168 @@ const nightstand: Sprite = (c, { x, y, w, h }) => {
   px(c, S.shadeLight, x + 8, y + 2, w - 16, 4)
 }
 
+const fridge: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.metalDark, x, y, w, h - 2)
+  px(c, S.fridge, x + 1, y + 1, w - 2, h - 4)
+  px(c, S.fridgeLight, x + 2, y + 2, 3, h - 6)
+  const split = y + Math.round(h * 0.36)
+  px(c, S.metalDark, x + 1, split, w - 2, 2)
+  px(c, S.metalDark, x + w - 7, y + 5, 2, 10)
+  px(c, S.metalDark, x + w - 7, split + 6, 2, 14)
+}
+
+/** Two-door wooden cabinet front shared by counters, sinks and vanities. */
+function cabinetFront(c: Ctx, x: number, y: number, w: number, h: number): void {
+  const mid = x + Math.floor(w / 2)
+  px(c, S.woodDeep, x, y, w, h)
+  px(c, S.wood, x + 1, y + 1, w - 2, h - 2)
+  px(c, S.woodDark, mid, y + 1, 1, h - 2)
+  px(c, S.glow, mid - 4, y + 3, 2, 3)
+  px(c, S.glow, mid + 3, y + 3, 2, 3)
+}
+
+function counterBody(c: Ctx, { x, y, w, h }: Rect): number {
+  const top = Math.round(h * 0.45)
+  px(c, S.shadow, x + 1, y + h - 2, w - 2, 2)
+  px(c, S.counterEdge, x, y, w, top)
+  px(c, S.counterTop, x, y, w, top - 3)
+  cabinetFront(c, x + 1, y + top, w - 2, h - top - 2)
+  return top
+}
+
+const counter: Sprite = (c, area) => {
+  counterBody(c, area)
+}
+
+const sink: Sprite = (c, area) => {
+  counterBody(c, area)
+  const { x, y, w } = area
+  px(c, S.metalDark, x + 8, y + 4, w - 16, 11)
+  px(c, S.metal, x + 9, y + 5, w - 18, 9)
+  px(c, S.metalDark, x + Math.floor(w / 2) - 1, y + 1, 2, 5) // faucet
+}
+
+const stove: Sprite = (c, { x, y, w, h }) => {
+  const top = Math.round(h * 0.45)
+  px(c, S.shadow, x + 1, y + h - 2, w - 2, 2)
+  px(c, S.stove, x, y, w, top)
+  ellipse(c, S.stoveRing, x + 3, y + 3, 11, 7)
+  ellipse(c, S.stoveRing, x + w - 14, y + 3, 11, 7)
+  ellipse(c, S.stove, x + 6, y + 5, 5, 3)
+  ellipse(c, S.stove, x + w - 11, y + 5, 5, 3)
+  px(c, S.metalDark, x, y + top, w, h - top - 2)
+  px(c, S.stove, x + 3, y + top + 4, w - 6, h - top - 10) // oven window
+  px(c, S.screenLight, x + 5, y + top + 6, 6, 2)
+  px(c, S.metal, x + 3, y + top + 1, w - 6, 2) // handle
+}
+
+const diningTable: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 4, y + h - 2, w - 8, 2)
+  px(c, S.woodDeep, x + 3, y + h - 14, 3, 12)
+  px(c, S.woodDeep, x + w - 6, y + h - 14, 3, 12)
+  px(c, S.woodDark, x, y, w, h - 12)
+  px(c, S.woodLight, x + 1, y + 1, w - 2, h - 18)
+  px(c, S.wood, x + 1, y + h - 17, w - 2, 4)
+  ellipse(c, S.white, x + Math.floor(w / 2) - 7, y + 8, 14, 8) // fruit bowl
+  px(c, S.raincoat, x + Math.floor(w / 2) - 3, y + 6, 3, 3)
+  px(c, S.dogBedRim, x + Math.floor(w / 2), y + 7, 3, 3)
+  px(c, S.white, x + 8, y + 10, 8, 6) // place settings
+  px(c, S.white, x + w - 16, y + 10, 8, 6)
+}
+
+/** Chair seen from the front: backrest at the top. */
+const chair: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.woodDark, x + 1, y, w - 2, 6)
+  px(c, S.wood, x + 2, y + 1, w - 4, 3)
+  px(c, S.cream, x, y + 7, w, h - 11)
+  px(c, S.creamDark, x, y + h - 6, w, 2)
+  px(c, S.woodDeep, x + 1, y + h - 4, 2, 4)
+  px(c, S.woodDeep, x + w - 3, y + h - 4, 2, 4)
+}
+
+/** Chair seen from behind: backrest at the bottom, in front of the seat. */
+const chairBack: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x, y + h - 2, w, 2)
+  px(c, S.cream, x, y, w, h - 10)
+  px(c, S.woodDeep, x + 1, y + 1, 2, 3)
+  px(c, S.woodDeep, x + w - 3, y + 1, 2, 3)
+  px(c, S.woodDark, x + 1, y + h - 11, w - 2, 9)
+  px(c, S.wood, x + 2, y + h - 10, w - 4, 4)
+}
+
+const bathtub: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.metalDark, x + 4, y + h - 5, 4, 3)
+  px(c, S.metalDark, x + w - 8, y + h - 5, 4, 3)
+  px(c, S.white, x, y, w, h - 4)
+  px(c, S.whiteShade, x, y + h - 8, w, 4)
+  px(c, S.whiteShade, x + 4, y + 4, w - 8, h - 14)
+  px(c, S.water, x + 5, y + 5, w - 10, h - 16)
+  px(c, S.waterLight, x + 8, y + 8, 18, 2)
+  px(c, S.metal, x + w - 14, y - 1, 8, 4) // faucet
+}
+
+const toilet: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.white, x + 2, y, w - 4, 14)
+  px(c, S.whiteShade, x + 2, y + 11, w - 4, 3)
+  px(c, S.metal, x + Math.floor(w / 2) - 2, y + 2, 4, 2)
+  ellipse(c, S.white, x, y + 14, w, h - 17)
+  ellipse(c, S.whiteShade, x + 3, y + 17, w - 6, h - 24)
+}
+
+const vanity: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.windowFrame, x + 2, y, w - 4, 17)
+  px(c, S.sky, x + 4, y + 2, w - 8, 13)
+  px(c, S.skyLight, x + 5, y + 3, 5, 2)
+  px(c, S.shadow, x + 1, y + h - 2, w - 2, 2)
+  px(c, S.white, x, y + 20, w, 10)
+  ellipse(c, S.whiteShade, x + 5, y + 22, w - 10, 6)
+  px(c, S.metal, x + Math.floor(w / 2) - 1, y + 19, 2, 3)
+  cabinetFront(c, x + 1, y + 30, w - 2, h - 32)
+}
+
+const desk: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.woodDark, x, y, w, 26)
+  px(c, S.woodLight, x + 1, y + 1, w - 2, 22)
+  px(c, S.bezel, x + 22, y + 2, 22, 14) // monitor
+  px(c, S.screen, x + 24, y + 4, 18, 10)
+  px(c, S.screenLight, x + 26, y + 6, 8, 2)
+  px(c, S.bezel, x + 31, y + 16, 4, 3)
+  px(c, S.whiteShade, x + 22, y + 19, 18, 3) // keyboard
+  px(c, S.white, x + w - 10, y + 12, 5, 6) // mug
+  px(c, S.woodDeep, x + 1, y + 26, w - 2, h - 28)
+  px(c, S.wood, x + 3, y + 28, 18, h - 32)
+  px(c, S.wood, x + w - 21, y + 28, 18, h - 32)
+  px(c, S.glow, x + 10, y + 31, 2, 3)
+  px(c, S.glow, x + w - 12, y + 31, 2, 3)
+}
+
+const singleBed: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 3, w - 4, 3)
+  px(c, S.woodDark, x, y, w, h - 2)
+  px(c, S.woodDeep, x, y, w, 8)
+  px(c, S.white, x + 6, y + 9, w - 12, 14)
+  px(c, S.whiteShade, x + 6, y + 20, w - 12, 3)
+  px(c, S.quilt, x + 3, y + 25, w - 6, h - 30)
+  px(c, S.quiltLight, x + 3, y + 25, w - 6, 5)
+  px(c, S.quiltDark, x + 3, y + 30, w - 6, 1)
+  for (let sx = x + 9; sx < x + w - 6; sx += 10) px(c, S.quiltDark, sx, y + 40, 1, h - 48)
+}
+
+const frontDoor: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.woodDeep, x, y, w, h)
+  px(c, S.doorWood, x + 2, y + 2, w - 4, h - 2)
+  px(c, S.doorWoodLight, x + 4, y + 4, w - 8, 3)
+  px(c, S.sky, x + 8, y + 9, w - 16, 14)
+  px(c, S.skyLight, x + 9, y + 10, 4, 3)
+  px(c, S.doorWoodLight, x + 5, y + 28, w - 10, h - 34)
+  px(c, S.doorWood, x + 7, y + 30, w - 14, h - 38)
+  px(c, S.glow, x + w - 9, y + Math.floor(h / 2), 3, 3)
+}
+
 /** Registry: one drawing function per furniture kind. */
 export const sprites: Record<FurnitureKind, Sprite> = {
   sofa,
@@ -264,4 +426,17 @@ export const sprites: Record<FurnitureKind, Sprite> = {
   bed,
   wardrobe,
   nightstand,
+  fridge,
+  counter,
+  sink,
+  stove,
+  diningTable,
+  chair,
+  chairBack,
+  bathtub,
+  toilet,
+  vanity,
+  desk,
+  singleBed,
+  frontDoor,
 }

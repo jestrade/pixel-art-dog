@@ -6,7 +6,7 @@ Guidance for working in this repository.
 
 Pixel Pup: a pixel-art game where the player controls a Yorkshire Terrier in a house with 3 rooms. Keyboard moves the dog, collisions prevent overlap, and on-screen buttons trigger actions (jump, bark, more later). See [README.md](README.md) for the concept and roadmap.
 
-Status: the house (3 rooms, furniture, collisions) and a walking Yorkie are built: fixed-timestep game loop, keyboard movement (arrows/WASD), wall and furniture collision with sliding. Jump, bark, and the on-screen action buttons are not built yet.
+Status: the single-level house (7 rooms: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, entry; furniture; collisions) and a walking Yorkie are built: fixed-timestep game loop, keyboard movement (arrows/WASD), wall and furniture collision with sliding. Jump, bark, and the on-screen action buttons are not built yet.
 
 ## Stack
 
@@ -29,7 +29,7 @@ Keep a hard boundary between game logic and rendering/UI.
 - `src/render/`: draws a game state to a canvas. Reads state, never changes it.
 - `src/ui/`: React components. Host the canvas, show action buttons, forward input.
 
-The house lives in `src/game/house.ts` (rooms, partitions, doorways, furniture in tiles of 16px) and `src/game/collision.ts` (`canOccupy`). Each furniture kind is drawn by one function in `src/render/sprites.ts`, registered in a `Record<FurnitureKind, Sprite>`; adding a kind means one type entry, one drawer, and placements in the house data. Only things in a room floor or doorway are walkable; everything else, including walls and outside space, blocks by default.
+The house lives in `src/game/house.ts` (rooms, partitions, doorways, furniture in tiles of 16px; the floor plan is sketched in a comment there). Rooms in one row are split by one-tile partitions, rooms in different rows share a wall (each room has a 4-tile back wall at its top), and doorways cut through either. Doorways and furniture must leave at least 12px (the dog's width) to walk through; the reachability test in `house.test.ts` enforces that every room can be reached and `src/game/collision.ts` (`canOccupy`). Each furniture kind is drawn by one function in `src/render/sprites.ts`, registered in a `Record<FurnitureKind, Sprite>`; adding a kind means one type entry, one drawer, and placements in the house data. Only things in a room floor or doorway are walkable; everything else, including walls and outside space, blocks by default.
 
 The dog is plain data (`src/game/dog.ts`: position, facing, walk clock) advanced by the pure function `stepDog(dog, direction, dt, house)`. Input is turned into a direction by `src/game/input.ts`; `src/ui/GameCanvas.tsx` owns the key listeners and runs `src/ui/gameLoop.ts`. The renderer (`src/render/drawHouse.ts`) paints static parts once to an offscreen canvas, then y-sorts furniture and "actors" (the dog) each frame so the dog passes in front of and behind furniture. The preview browser pane throttles animation to about 2 fps, so game time runs slow there; check movement with the unit tests.
 
