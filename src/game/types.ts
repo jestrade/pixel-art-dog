@@ -75,6 +75,6 @@ export interface House {
   /** Openings between rooms. Walkable. */
   doorways: Rect[]
   furniture: Furniture[]
-  /** Top-left corner of the dog's body when the game starts. */
-  dogSpawn: { x: number; y: number }
+  /** Top-left corner of each dog's body when the game starts. The first one is the player's dog. */
+  dogSpawns: Array<{ x: number; y: number }>
 }

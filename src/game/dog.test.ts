@@ -15,7 +15,7 @@ function walk(start: Dog, dir: Direction, seconds: number): Dog {
   return dog
 }
 
-const spawn = () => createDog(house.dogSpawn.x, house.dogSpawn.y)
+const spawn = () => createDog(house.dogSpawns[0].x, house.dogSpawns[0].y)
 
 describe('stepDog', () => {
   it('starts on a free spot', () => {

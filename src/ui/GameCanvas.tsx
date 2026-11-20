@@ -16,6 +16,7 @@ export function GameCanvas({ session }: { session: Session }) {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return // leave browser shortcuts alone
+      if (e.target instanceof HTMLSelectElement) return // arrow keys belong to the breed picker while it has focus
       if (session.keyDown(e.code, e.repeat)) e.preventDefault() // e.g. keep Space and arrows from scrolling
     }
     const onKeyUp = (e: KeyboardEvent) => session.keyUp(e.code)
@@ -27,7 +28,7 @@ export function GameCanvas({ session }: { session: Session }) {
 
     const stop = startLoop(
       (dt) => session.update(dt),
-      () => render(ctx, [dogActor(session.getDog())]),
+      () => render(ctx, session.getDogs().map(dogActor)),
     )
 
     return () => {
@@ -44,7 +45,7 @@ export function GameCanvas({ session }: { session: Session }) {
       className="house-canvas"
       width={house.width}
       height={house.height}
-      aria-label="Pixel art house with seven rooms and a Yorkshire Terrier you can walk around"
+      aria-label="Pixel art house with seven rooms and five dogs, one of which you can walk around"
     />
   )
 }

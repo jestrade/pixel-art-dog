@@ -158,5 +158,11 @@ export const house: House = {
     rect(19, 23, 3, 4),
   ],
   furniture,
-  dogSpawn: { x: t(1.5), y: t(16) },
+  dogSpawns: [
+    { x: t(1.5), y: t(16) }, // you: living room
+    { x: t(30), y: t(15) }, // kitchen
+    { x: t(8), y: t(8) }, // master bedroom
+    { x: t(29), y: t(7.5) }, // kids' bedroom
+    { x: t(18), y: t(30) }, // entry
+  ],
 }

@@ -23,11 +23,11 @@ function contains(area: Rect, px: number, py: number): boolean {
 }
 
 /**
- * True when `body` sits entirely on walkable ground and touches no solid furniture.
+ * True when `body` sits entirely on walkable ground and touches no solid furniture or other bodies in `blockers`.
  * Ground is checked at the corners, edge midpoints and center, so it assumes bodies
  * are smaller than the narrowest wall (one tile).
  */
-export function canOccupy(house: House, body: Rect): boolean {
+export function canOccupy(house: House, body: Rect, blockers: readonly Rect[] = []): boolean {
   const areas = walkableAreas(house)
   const xs = [body.x, body.x + Math.floor((body.w - 1) / 2), body.x + body.w - 1]
   const ys = [body.y, body.y + Math.floor((body.h - 1) / 2), body.y + body.h - 1]
@@ -38,5 +38,6 @@ export function canOccupy(house: House, body: Rect): boolean {
     }
   }
 
-  return !house.furniture.some((item) => item.footprint !== null && overlaps(item.footprint, body))
+  if (house.furniture.some((item) => item.footprint !== null && overlaps(item.footprint, body))) return false
+  return !blockers.some((other) => overlaps(other, body))
 }

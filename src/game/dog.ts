@@ -1,4 +1,5 @@
 import { ACTIONS, type ActionKind } from './actions'
+import type { BreedId } from './breeds'
 import { canOccupy } from './collision'
 import type { Direction } from './input'
 import type { House, Rect } from './types'
@@ -12,11 +13,16 @@ export interface ActiveAction {
 }
 
 export interface Dog {
+  /** Index of this dog in the house, 0 for the player's dog. */
+  id: number
+  breed: BreedId
   /** Top-left of the body footprint, in world pixels. May be fractional. */
   x: number
   y: number
   facing: Facing
   moving: boolean
+  /** Moving at running speed. */
+  running: boolean
   /** Seconds spent walking; drives the walk animation. */
   walkClock: number
   /** What the dog is doing besides walking, or null when it is free. */
@@ -29,8 +35,11 @@ export const DOG_BODY = { w: 12, h: 8 }
 /** Walking speed in world pixels per second. */
 export const DOG_SPEED = 64
 
-export function createDog(x: number, y: number): Dog {
-  return { x, y, facing: 'down', moving: false, walkClock: 0, action: null }
+/** Running speed in world pixels per second. */
+export const DOG_RUN_SPEED = 112
+
+export function createDog(x: number, y: number, breed: BreedId = 'cream', id = 0): Dog {
+  return { id, breed, x, y, facing: 'down', moving: false, running: false, walkClock: 0, action: null }
 }
 
 export function dogBody(x: number, y: number): Rect {
@@ -58,11 +67,19 @@ function advanceAction(action: ActiveAction | null, dt: number): ActiveAction | 
 
 const STILL: Direction = { x: 0, y: 0 }
 
+export interface StepOptions {
+  /** Move at running speed instead of walking speed. */
+  run?: boolean
+  /** Other bodies the dog must not overlap, such as other dogs. */
+  blockers?: readonly Rect[]
+}
+
 /**
  * Advance the dog by `dt` seconds. Each axis is tried on its own, so a blocked axis
  * does not stop the other and the dog slides along walls and furniture.
  */
-export function stepDog(dog: Dog, input: Direction, dt: number, house: House): Dog {
+export function stepDog(dog: Dog, input: Direction, dt: number, house: House, options: StepOptions = {}): Dog {
+  const { run = false, blockers = [] } = options
   let action = advanceAction(dog.action, dt)
   let dir = input
   const wantsToMove = input.x !== 0 || input.y !== 0
@@ -72,18 +89,28 @@ export function stepDog(dog: Dog, input: Direction, dt: number, house: House): D
     else dir = STILL
   }
 
-  if (dir.x === 0 && dir.y === 0) return { ...dog, action, moving: false }
+  if (dir.x === 0 && dir.y === 0) return { ...dog, action, moving: false, running: false }
 
   let { x, y } = dog
+  const speed = run ? DOG_RUN_SPEED : DOG_SPEED
 
-  const nextX = x + dir.x * DOG_SPEED * dt
-  if (canOccupy(house, dogBody(nextX, y))) x = nextX
+  const nextX = x + dir.x * speed * dt
+  if (canOccupy(house, dogBody(nextX, y), blockers)) x = nextX
 
-  const nextY = y + dir.y * DOG_SPEED * dt
-  if (canOccupy(house, dogBody(x, nextY))) y = nextY
+  const nextY = y + dir.y * speed * dt
+  if (canOccupy(house, dogBody(x, nextY), blockers)) y = nextY
 
   const moved = x !== dog.x || y !== dog.y
   const facing: Facing = dir.x !== 0 ? (dir.x < 0 ? 'left' : 'right') : dir.y < 0 ? 'up' : 'down'
 
-  return { x, y, facing, action, moving: moved, walkClock: moved ? dog.walkClock + dt : 0 }
+  return {
+    ...dog,
+    x,
+    y,
+    facing,
+    action,
+    moving: moved,
+    running: moved && run,
+    walkClock: moved ? dog.walkClock + dt : 0,
+  }
 }

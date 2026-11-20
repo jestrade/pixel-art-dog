@@ -1,13 +1,14 @@
 # Pixel Pup
 
-A pixel-art browser game where you play with a Yorkshire Terrier. Walk the dog around a small house with three rooms, and make it jump, bark, and more.
+A pixel-art browser game where you play with a pet dog. Walk it around a seven-room house with four other dogs, pick every dog's breed, and make yours jump, bark, run, and more.
 
-> Status: early. You can walk the Yorkie around the seven-room house with the keyboard, and it collides with walls and furniture. Jump, bark, sit, and wag work from keys and on-screen buttons. The map fills the window without stretching.
+> Status: early. You can walk your dog around the seven-room house while four other dogs wander on their own, and you can change every dog's breed. Jump, bark, sit, and wag work from keys and on-screen buttons. The map fills the window without stretching.
 
 ## Concept
 
 - Top-down pixel-art, single-level house with **7 rooms** connected by doorways: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, and entry.
-- You control a **Yorkie** with the keyboard.
+- You control a dog with the keyboard. Four more dogs wander the house on their own: they walk, run, jump, bark, wag, and sit.
+- A **breed selector** (the Dogs button) lets you pick the breed of every dog, including yours.
 - **Collisions** keep the dog out of walls and furniture, so nothing overlaps.
 - On-screen **action buttons** trigger pet actions: jump, bark, and others to come.
 
@@ -16,6 +17,7 @@ A pixel-art browser game where you play with a Yorkshire Terrier. Walk the dog a
 | Input | Action |
 |---|---|
 | Arrow keys / WASD | Move the dog |
+| Shift (or the Run button) | Run |
 | Space | Jump |
 | B | Bark |
 | E | Sit (press again, or walk, to stand) |
@@ -48,7 +50,8 @@ src/
 3. ~~Game loop, Yorkie sprite, and keyboard-driven movement with collisions.~~
 4. ~~Jump, bark, sit, and wag with animations.~~
 5. ~~Action buttons wired to the same actions as the keyboard.~~
-6. More actions, furniture, sounds.
+6. ~~Four wandering dogs and a breed selector.~~
+7. Breeds with different shapes (ears, size), more actions, furniture, sounds.
 
 ## Getting started
 

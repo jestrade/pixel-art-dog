@@ -7,7 +7,7 @@ import { createSession } from './session'
 const FPS = 1 / 60
 const RIGHT = { x: 1, y: 0 }
 const STILL = { x: 0, y: 0 }
-const spawn = () => createDog(house.dogSpawn.x, house.dogSpawn.y)
+const spawn = () => createDog(house.dogSpawns[0].x, house.dogSpawns[0].y)
 
 function run(dog: ReturnType<typeof spawn>, seconds: number, input = STILL) {
   let d = dog
@@ -70,7 +70,7 @@ describe('session', () => {
     expect(session.keyDown('KeyZ', false)).toBe(false)
     session.keyDown('ArrowRight', false)
     session.update(0.5)
-    expect(session.getDog().x).toBeGreaterThan(house.dogSpawn.x)
+    expect(session.getDog().x).toBeGreaterThan(house.dogSpawns[0].x)
     session.keyUp('ArrowRight')
     const stoppedAt = session.getDog().x
     session.update(0.5)

@@ -8,10 +8,17 @@ const RIGHT = ['ArrowRight', 'KeyD']
 const UP = ['ArrowUp', 'KeyW']
 const DOWN = ['ArrowDown', 'KeyS']
 
-/** Every key code that moves the dog. */
-export const MOVE_KEYS: ReadonlySet<string> = new Set([...LEFT, ...RIGHT, ...UP, ...DOWN])
+const RUN = ['ShiftLeft', 'ShiftRight']
+
+/** Every key code that steers or speeds up the dog. */
+export const MOVE_KEYS: ReadonlySet<string> = new Set([...LEFT, ...RIGHT, ...UP, ...DOWN, ...RUN])
 
 const anyDown = (keys: ReadonlySet<string>, codes: string[]) => codes.some((code) => keys.has(code))
+
+/** True while a run key is held. */
+export function isRunHeld(keys: ReadonlySet<string>): boolean {
+  return anyDown(keys, RUN)
+}
 
 /** Unit-length movement direction for the keys currently held. Opposite keys cancel out. */
 export function directionFromKeys(keys: ReadonlySet<string>): Direction {

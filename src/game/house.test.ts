@@ -41,7 +41,7 @@ describe('house layout', () => {
 })
 
 describe('collisions', () => {
-  const spawn = { ...house.dogSpawn, ...DOG }
+  const spawn = { ...house.dogSpawns[0], ...DOG }
 
   it('allows standing on open floor', () => {
     expect(canOccupy(house, spawn)).toBe(true)
