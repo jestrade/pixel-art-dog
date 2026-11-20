@@ -1,52 +1,33 @@
-import { useEffect, useRef, useState } from 'react'
-import { createDog, stepDog } from '../game/dog'
+import { useEffect, useRef } from 'react'
 import { house } from '../game/house'
-import { directionFromKeys, MOVE_KEYS } from '../game/input'
+import type { Session } from '../game/session'
 import { createHouseRenderer } from '../render/drawHouse'
 import { dogActor } from '../render/dogSprite'
 import { startLoop } from './gameLoop'
 
-/** Largest whole-number zoom that fits the window, so pixels stay square and crisp. */
-function fitScale(): number {
-  const fit = Math.min((window.innerWidth - 24) / house.width, (window.innerHeight - 110) / house.height)
-  return Math.max(1, Math.floor(fit))
-}
-
-export function GameCanvas() {
+export function GameCanvas({ session }: { session: Session }) {
   const ref = useRef<HTMLCanvasElement>(null)
-  const [scale, setScale] = useState(fitScale)
-
-  useEffect(() => {
-    const onResize = () => setScale(fitScale())
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
 
   useEffect(() => {
     const ctx = ref.current?.getContext('2d')
     if (!ctx) return
 
     const render = createHouseRenderer(house)
-    const held = new Set<string>()
-    let dog = createDog(house.dogSpawn.x, house.dogSpawn.y)
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (!MOVE_KEYS.has(e.code)) return
-      e.preventDefault() // keep arrow keys from scrolling the page
-      held.add(e.code)
+      if (e.metaKey || e.ctrlKey || e.altKey) return // leave browser shortcuts alone
+      if (session.keyDown(e.code, e.repeat)) e.preventDefault() // e.g. keep Space and arrows from scrolling
     }
-    const onKeyUp = (e: KeyboardEvent) => held.delete(e.code)
-    const onBlur = () => held.clear() // a key released while the window is unfocused never sends keyup
+    const onKeyUp = (e: KeyboardEvent) => session.keyUp(e.code)
+    const onBlur = () => session.releaseAll() // a key released while the window is unfocused never sends keyup
 
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
     window.addEventListener('blur', onBlur)
 
     const stop = startLoop(
-      (dt) => {
-        dog = stepDog(dog, directionFromKeys(held), dt, house)
-      },
-      () => render(ctx, [dogActor(dog)]),
+      (dt) => session.update(dt),
+      () => render(ctx, [dogActor(session.getDog())]),
     )
 
     return () => {
@@ -55,7 +36,7 @@ export function GameCanvas() {
       window.removeEventListener('keyup', onKeyUp)
       window.removeEventListener('blur', onBlur)
     }
-  }, [])
+  }, [session])
 
   return (
     <canvas
@@ -63,8 +44,7 @@ export function GameCanvas() {
       className="house-canvas"
       width={house.width}
       height={house.height}
-      style={{ width: house.width * scale, height: house.height * scale }}
-      aria-label="Pixel art house with a bedroom, a living room and an entry, and a Yorkshire Terrier you can walk around"
+      aria-label="Pixel art house with seven rooms and a Yorkshire Terrier you can walk around"
     />
   )
 }
