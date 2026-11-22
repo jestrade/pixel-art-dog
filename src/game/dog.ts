@@ -101,7 +101,9 @@ export function stepDog(dog: Dog, input: Direction, dt: number, house: House, op
   if (canOccupy(house, dogBody(x, nextY), blockers)) y = nextY
 
   const moved = x !== dog.x || y !== dog.y
-  const facing: Facing = dir.x !== 0 ? (dir.x < 0 ? 'left' : 'right') : dir.y < 0 ? 'up' : 'down'
+  // Face along the stronger axis; a tie (a perfect diagonal) faces sideways.
+  const facing: Facing =
+    Math.abs(dir.x) >= Math.abs(dir.y) ? (dir.x < 0 ? 'left' : 'right') : dir.y < 0 ? 'up' : 'down'
 
   return {
     ...dog,

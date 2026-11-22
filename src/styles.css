@@ -10,6 +10,11 @@ body {
   background: #0e0e14;
   color: #e8e0d0;
   font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  overscroll-behavior: none; /* no pull-to-refresh or rubber-band scrolling while playing */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* The map takes all the space above the button bar. object-fit keeps its proportions, so it is never stretched. */
@@ -19,6 +24,8 @@ body {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top); /* room for the iPhone notch when added to the home screen */
 }
 
 .stage {
@@ -33,6 +40,31 @@ body {
   height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
+}
+
+.joystick {
+  position: absolute;
+  left: calc(16px + env(safe-area-inset-left));
+  bottom: 16px;
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: rgba(27, 22, 32, 0.55);
+  border: 2px solid rgba(217, 167, 102, 0.75);
+  touch-action: none; /* the browser must not scroll or zoom while a finger is on the stick */
+}
+
+.joystick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #d9a766;
+  border: 2px solid #fff4dc;
+  box-shadow: 0 3px 0 rgba(58, 36, 16, 0.8);
+  pointer-events: none;
 }
 
 .dog-panel {
@@ -90,6 +122,7 @@ body {
   min-height: 32px;
   padding: 2px 6px;
   font: inherit;
+  font-size: 16px; /* iOS zooms into inputs smaller than 16px */
   color: #fff4dc;
   background: #3a2410;
   border: 1px solid #d9a766;
@@ -155,13 +188,22 @@ body {
   border-radius: 3px;
 }
 
-@media (max-width: 480px) {
+@media (pointer: coarse), (max-width: 480px) {
   .action-button kbd {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-bar {
+    gap: 6px;
+    padding-left: calc(8px + env(safe-area-inset-left));
+    padding-right: calc(8px + env(safe-area-inset-right));
   }
 
   .action-button {
     min-width: 0;
     flex: 1;
+    padding: 6px 8px;
   }
 }

@@ -18,6 +18,7 @@ Status: the single-level house (7 rooms: master bedroom, bathroom, kids' bedroom
 
 - `npm install`
 - `npm run dev`: start Vite on http://localhost:5173
+- `npm run dev:lan`: same, but listens on the local network so an iPhone or iPad can open it
 - `npm run build`: typecheck and build
 - `npm test`: run Vitest (game logic only)
 
@@ -36,6 +37,8 @@ Each dog is plain data (`src/game/dog.ts`: id, breed, position, facing, running,
 Actions: `src/game/actions.ts` is a registry (label, key, duration, whether it locks movement). `performAction` and `stepDog` in `src/game/dog.ts` apply it: the dog's `action` field is the current state, and the registry says what that state allows. `src/game/session.ts` holds the running game; keys and `src/ui/ActionBar.tsx` buttons both call `session.perform(kind)`. To add an action: one registry entry, one pose in `src/render/dogSprite.ts`.
 
 Several dogs: `src/game/session.ts` holds every dog with a `Controller` (`src/game/controllers.ts`): the player's dog reads the keyboard, the others use `createWanderer(rng)`. Each tick a controller returns an intent (direction, run, action), so adding a different behaviour means writing another controller. Randomness is injected (`src/game/random.ts`), so tests use a seeded generator. Breeds are colors only (`src/render/breedPalettes.ts`, names in `src/game/breeds.ts`): all breeds share one silhouette, and each dog's hair bow color (by id) tells dogs of the same breed apart. Spawn spots are in `house.dogSpawns` and the tests check they are free.
+
+Touch: `src/ui/Joystick.tsx` (shown when `isTouchDevice()` is true, or with `?touch` in the URL) calls `session.setStick(unit vector)`; held keys win over the stick. The stick uses pointer events with pointer capture and `touch-action: none`, which is what stops iOS from scrolling or zooming while a finger is on it. Keep iOS in mind in styles: form controls at 16px or larger (smaller ones make Safari zoom), safe-area insets, and no hover-only UI.
 
 Design decisions made so far:
 

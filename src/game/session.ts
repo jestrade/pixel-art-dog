@@ -2,7 +2,7 @@ import { ACTION_BY_CODE, type ActionKind } from './actions'
 import { DEFAULT_BREEDS, type BreedId } from './breeds'
 import { createWanderer, type Controller } from './controllers'
 import { createDog, dogBody, performAction, stepDog, type Dog } from './dog'
-import { directionFromKeys, isRunHeld, MOVE_KEYS } from './input'
+import { directionFromKeys, isRunHeld, MOVE_KEYS, type Direction } from './input'
 import type { Rng } from './random'
 import type { House } from './types'
 
@@ -19,6 +19,8 @@ export interface Session {
   /** The dog you control. */
   getDog(): Dog
   setBreed(id: number, breed: BreedId): void
+  /** Steer the player's dog from a touch joystick: a unit vector, or zero to stop. Keys win when both are used. */
+  setStick(dir: Direction): void
   /** Keep the player's dog running without holding a key (for touch screens). */
   setRunLock(on: boolean): void
   perform(kind: ActionKind): void
@@ -37,12 +39,13 @@ interface Entry {
 export function createSession(house: House, rng: Rng = Math.random): Session {
   const held = new Set<string>()
   let runLock = false
+  let stick: Direction = { x: 0, y: 0 }
 
-  const keyboard: Controller = () => ({
-    dir: directionFromKeys(held),
-    run: runLock || isRunHeld(held),
-    action: null,
-  })
+  const keyboard: Controller = () => {
+    const keys = directionFromKeys(held)
+    const usingKeys = keys.x !== 0 || keys.y !== 0
+    return { dir: usingKeys ? keys : stick, run: runLock || isRunHeld(held), action: null }
+  }
 
   const entries: Entry[] = house.dogSpawns.map((spawn, id) => ({
     dog: createDog(spawn.x, spawn.y, DEFAULT_BREEDS[id % DEFAULT_BREEDS.length], id),
@@ -59,6 +62,9 @@ export function createSession(house: House, rng: Rng = Math.random): Session {
     setBreed(id, breed) {
       const entry = entries[id]
       if (entry) entry.dog = { ...entry.dog, breed }
+    },
+    setStick(dir) {
+      stick = dir
     },
     setRunLock(on) {
       runLock = on

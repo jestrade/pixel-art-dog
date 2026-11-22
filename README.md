@@ -22,6 +22,7 @@ A pixel-art browser game where you play with a pet dog. Walk it around a seven-r
 | B | Bark |
 | E | Sit (press again, or walk, to stand) |
 | Q | Wag tail |
+| On-screen joystick (touch devices) | Move the dog |
 | On-screen buttons | Same actions as the keys, by mouse or touch |
 
 Keys and buttons trigger the same actions, so the two never drift apart.
@@ -53,10 +54,23 @@ src/
 6. ~~Four wandering dogs and a breed selector.~~
 7. Breeds with different shapes (ears, size), more actions, furniture, sounds.
 
+## Playing on iPhone or iPad
+
+Touch devices get an on-screen joystick in the bottom-left corner, so no keyboard is needed. Drag it to walk, use the **Run** button to keep running, and the other buttons for jump, bark, sit, and wag.
+
+To try it on your own phone or tablet while developing, put it on the same Wi-Fi as your computer and run:
+
+```bash
+npm run dev:lan
+```
+
+Then open the `Network` address Vite prints (for example `http://192.168.1.20:5173`) in Safari. For a full-screen game without Safari's toolbars, tap Share, then **Add to Home Screen**. The dev server is open to your local network while `dev:lan` runs, so stop it when you are done.
+
 ## Getting started
 
 ```bash
 npm install
 npm run dev     # http://localhost:5173
+npm run dev:lan # same, but reachable from phones on your Wi-Fi
 npm test        # game logic tests
 ```

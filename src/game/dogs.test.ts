@@ -133,3 +133,47 @@ describe('session with several dogs', () => {
     expect(shift.getDog().running).toBe(true)
   })
 })
+
+describe('touch stick', () => {
+  const moved = (s: ReturnType<typeof createSession>) => ({
+    dx: s.getDog().x - house.dogSpawns[0].x,
+    dy: s.getDog().y - house.dogSpawns[0].y,
+  })
+
+  it('moves the player dog like the keyboard does', () => {
+    const session = createSession(house, seededRng(1))
+    session.setStick({ x: 1, y: 0 })
+    session.update(0.5)
+    expect(moved(session).dx).toBeCloseTo(DOG_SPEED * 0.5, 0)
+    expect(session.getDog().facing).toBe('right')
+
+    session.setStick({ x: 0, y: 0 })
+    const stoppedAt = session.getDog().x
+    session.update(0.5)
+    expect(session.getDog().x).toBe(stoppedAt)
+  })
+
+  it('faces along the stronger axis of an angled push', () => {
+    const session = createSession(house, seededRng(1))
+    session.setStick({ x: 0.3, y: -0.95 })
+    session.update(0.1)
+    expect(session.getDog().facing).toBe('up')
+  })
+
+  it('lets held keys win over the stick', () => {
+    const session = createSession(house, seededRng(1))
+    session.setStick({ x: 1, y: 0 })
+    session.keyDown('ArrowUp', false)
+    session.update(0.3)
+    expect(moved(session).dx).toBe(0)
+    expect(moved(session).dy).toBeLessThan(0)
+  })
+
+  it('runs with the run lock', () => {
+    const session = createSession(house, seededRng(1))
+    session.setRunLock(true)
+    session.setStick({ x: 1, y: 0 })
+    session.update(0.5)
+    expect(moved(session).dx).toBeCloseTo(DOG_RUN_SPEED * 0.5, 0)
+  })
+})
