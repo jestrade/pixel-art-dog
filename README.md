@@ -4,6 +4,15 @@ A pixel-art browser game where you play with a pet dog. Walk it around a seven-r
 
 > Status: early. You can walk your dog around the seven-room house while four other dogs wander on their own, and you can change every dog's breed. Jump, bark, sit, and wag work from keys and on-screen buttons. The map fills the window without stretching.
 
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/desktop.jpg" alt="The seven-room house on a desktop screen, with five dogs and the breed selector open" width="560">
+  <img src="docs/screenshots/mobile.jpg" alt="The game on a phone, with the on-screen joystick and action buttons" width="200">
+</p>
+
+*Left: desktop, with the breed selector open. Right: phone, with the on-screen joystick.*
+
 ## Concept
 
 - Top-down pixel-art, single-level house with **7 rooms** connected by doorways: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, and entry.
