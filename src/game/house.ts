@@ -36,11 +36,12 @@ function place(
 }
 
 /**
- * Floor plan (tiles, 34 x 32). Every room has a 4-tile back wall at its top.
+ * Floor plan (tiles, 34 x 43). Every room has a 4-tile back wall at its top.
  *
  *   y0   | Master bedroom | Bathroom | Kids' bedroom |
  *   y9   | Living room    | Kitchen and dining      |
- *   y23  | Office  | Entry |
+ *   y23  | Office  | Entry | Patio |
+ *   y32  | Garden                  |
  *
  * Rooms in a row are separated by one-tile partitions; rooms in different rows share a wall,
  * and doorways cut through it.
@@ -63,6 +64,9 @@ const rooms: Room[] = [
   room('kitchen', 'Kitchen', rect(17, 9, 17, 14), 'tile', 'cream'),
   room('office', 'Office', rect(0, 23, 13, 9), 'wood', 'blue'),
   room('entry', 'Entry', rect(13, 23, 10, 9), 'wood', 'green'),
+  // Outdoors: the patio's back wall is the house's brick exterior, the garden's is a fence.
+  room('patio', 'Patio', rect(23, 23, 11, 9), 'stone', 'brick'),
+  room('garden', 'Garden', rect(0, 32, 34, 11), 'grass', 'fence'),
 ]
 
 const furniture: Furniture[] = [
@@ -135,11 +139,31 @@ const furniture: Furniture[] = [
   place('doormat', 'doormat', 'floor', 16.2, 27.3, 2.6, 1.4),
   place('boots', 'boots', 'object', 14, 28.8, 1.5, 1, 0.7),
   place('entry-plant', 'plant', 'object', 20.9, 28.7, 1.9, 2.3, 1),
+
+  // Patio
+  place('patio-window-1', 'window', 'wall', 24.5, 24, 2.2, 2),
+  place('patio-window-2', 'window', 'wall', 30.8, 24, 2.2, 2),
+  place('patio-set', 'patioSet', 'object', 24.5, 26.5, 4, 4.5, 1.6),
+  place('patio-planter', 'bush', 'object', 23.3, 27, 1.8, 1.6, 1),
+  place('grill', 'grill', 'object', 31.5, 25.5, 1.8, 2.8, 1.2),
+  place('lounger', 'lounger', 'object', 31.5, 29.2, 2.2, 2.6, 1.6),
+
+  // Garden
+  place('garden-path', 'stonePath', 'floor', 27.4, 32, 3.2, 9.5),
+  place('tree-left', 'tree', 'object', 1, 33.2, 3.6, 6.4, 1.2),
+  place('tree-right', 'tree', 'object', 30.2, 33.4, 3.6, 6.4, 1.2),
+  place('flower-bed-1', 'flowerBed', 'object', 5.5, 36.2, 5, 1.6, 1.6),
+  place('bush-1', 'bush', 'object', 11.5, 36, 2, 1.6, 1),
+  place('flower-bed-2', 'flowerBed', 'object', 17.5, 36.2, 5, 1.6, 1.6),
+  place('bush-2', 'bush', 'object', 24.5, 36, 2.2, 1.6, 1),
+  place('bench', 'gardenBench', 'object', 6, 40.5, 3.2, 1.8, 1),
+  place('doghouse', 'doghouse', 'object', 19.5, 38.6, 3, 3, 1.6),
+  place('bush-3', 'bush', 'object', 1, 41, 2, 1.6, 1),
 ]
 
 export const house: House = {
   width: t(34),
-  height: t(32),
+  height: t(43),
   rooms,
   // Partitions between neighbouring rooms in a row, each stopping above its doorway.
   walls: [rect(12, 0, 1, 6), rect(22, 0, 1, 6), rect(16, 9, 1, 7), rect(16, 19, 1, 4)],
@@ -156,6 +180,9 @@ export const house: House = {
     rect(1, 23, 3, 4),
     rect(13, 23, 3, 4),
     rect(19, 23, 3, 4),
+    // Kitchen <-> patio (back door), patio <-> garden (gate)
+    rect(27, 23, 3, 4),
+    rect(27, 32, 4, 4),
   ],
   furniture,
   dogSpawns: [
@@ -163,6 +190,6 @@ export const house: House = {
     { x: t(30), y: t(15) }, // kitchen
     { x: t(8), y: t(8) }, // master bedroom
     { x: t(29), y: t(7.5) }, // kids' bedroom
-    { x: t(18), y: t(30) }, // entry
+    { x: t(20), y: t(38) }, // garden
   ],
 }

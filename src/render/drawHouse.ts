@@ -1,5 +1,6 @@
+import { fitView } from '../game/camera'
 import { roomFloor } from '../game/collision'
-import type { House } from '../game/types'
+import type { House, Rect } from '../game/types'
 import { type Ctx, px } from './draw'
 import { C } from './palette'
 import { sprites } from './sprites'
@@ -14,14 +15,21 @@ export interface Actor {
 
 /**
  * Build a renderer for a house. The static parts (floors, walls, rugs, wall decor) are painted
- * once into an offscreen canvas; each frame copies that and draws furniture and actors on top,
- * back to front, so the dog passes behind and in front of furniture correctly.
+ * once into an offscreen canvas. Each frame the whole world is drawn at its own resolution into a
+ * second offscreen canvas (furniture and actors back to front, so the dog passes behind and in
+ * front of furniture), and then the part inside the camera `view` is scaled onto the visible
+ * canvas without smoothing, so pixels stay sharp at any zoom.
  */
-export function createHouseRenderer(house: House): (c: Ctx, actors: Actor[]) => void {
+export function createHouseRenderer(house: House): (c: Ctx, actors: Actor[], view: Rect) => void {
   const backdrop = document.createElement('canvas')
   backdrop.width = house.width
   backdrop.height = house.height
   paintBackdrop(backdrop.getContext('2d')!, house)
+
+  const world = document.createElement('canvas')
+  world.width = house.width
+  world.height = house.height
+  const w = world.getContext('2d')!
 
   const objects: Actor[] = house.furniture
     .filter((f) => f.layer === 'object')
@@ -30,11 +38,36 @@ export function createHouseRenderer(house: House): (c: Ctx, actors: Actor[]) => 
       draw: (c) => sprites[f.kind](c, f.sprite, f.sprite.x + f.sprite.y),
     }))
 
-  return (c, actors) => {
-    c.imageSmoothingEnabled = false
-    c.drawImage(backdrop, 0, 0)
+  return (c, actors, view) => {
+    w.imageSmoothingEnabled = false
+    w.drawImage(backdrop, 0, 0)
     const ordered = [...objects, ...actors].sort((a, b) => a.baseline - b.baseline)
-    for (const item of ordered) item.draw(c)
+    for (const item of ordered) item.draw(w)
+
+    const screenW = c.canvas.width
+    const screenH = c.canvas.height
+    c.imageSmoothingEnabled = false
+    px(c, C.outside, 0, 0, screenW, screenH)
+
+    // Widen the view to the screen's shape so the picture fills it without stretching.
+    const shown = fitView(view, screenW / screenH)
+    const scale = screenW / shown.w
+    const left = Math.max(0, shown.x)
+    const top = Math.max(0, shown.y)
+    const right = Math.min(house.width, shown.x + shown.w)
+    const bottom = Math.min(house.height, shown.y + shown.h)
+    if (right <= left || bottom <= top) return
+    c.drawImage(
+      world,
+      left,
+      top,
+      right - left,
+      bottom - top,
+      Math.round((left - shown.x) * scale),
+      Math.round((top - shown.y) * scale),
+      Math.round((right - left) * scale),
+      Math.round((bottom - top) * scale),
+    )
   }
 }
 

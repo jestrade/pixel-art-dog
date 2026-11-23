@@ -17,7 +17,7 @@ body {
   user-select: none;
 }
 
-/* The map takes all the space above the button bar. object-fit keeps its proportions, so it is never stretched. */
+/* The map takes all the space above the button bar. The canvas matches its on-screen size and the renderer keeps the map's proportions, so it is never stretched. */
 .app {
   display: flex;
   flex-direction: column;
@@ -38,7 +38,6 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
   image-rendering: pixelated;
 }
 
@@ -165,11 +164,18 @@ body {
   box-shadow: 0 3px 0 #3a2410, inset 0 0 0 2px #fff4dc;
 }
 
-.action-button:hover {
+.action-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+.action-button:hover:not(:disabled) {
   background: #93653a;
 }
 
-.action-button:active {
+.action-button:active:not(:disabled) {
   transform: translateY(3px);
   box-shadow: none;
 }

@@ -7,7 +7,7 @@ const DOG = { w: 12, h: 8 }
 const STEP = 4
 
 describe('house layout', () => {
-  it('has seven rooms', () => {
+  it('has nine rooms', () => {
     expect(house.rooms.map((r) => r.id)).toEqual([
       'master',
       'bathroom',
@@ -16,6 +16,8 @@ describe('house layout', () => {
       'kitchen',
       'office',
       'entry',
+      'patio',
+      'garden',
     ])
   })
 

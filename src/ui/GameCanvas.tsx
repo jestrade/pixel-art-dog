@@ -12,7 +12,22 @@ export function GameCanvas({ session }: { session: Session }) {
     const ctx = ref.current?.getContext('2d')
     if (!ctx) return
 
+    const canvas = ctx.canvas
     const render = createHouseRenderer(house)
+
+    // Keep the canvas's pixel size equal to its on-screen size, so the picture is drawn sharp at any window size.
+    const resize = () => {
+      const ratio = window.devicePixelRatio || 1
+      const width = Math.max(1, Math.round(canvas.clientWidth * ratio))
+      const height = Math.max(1, Math.round(canvas.clientHeight * ratio))
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width
+        canvas.height = height
+      }
+    }
+    const observer = new ResizeObserver(resize)
+    observer.observe(canvas)
+    resize()
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return // leave browser shortcuts alone
@@ -28,11 +43,12 @@ export function GameCanvas({ session }: { session: Session }) {
 
     const stop = startLoop(
       (dt) => session.update(dt),
-      () => render(ctx, session.getDogs().map(dogActor)),
+      () => render(ctx, session.getDogs().map(dogActor), session.getView()),
     )
 
     return () => {
       stop()
+      observer.disconnect()
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
       window.removeEventListener('blur', onBlur)
@@ -43,9 +59,7 @@ export function GameCanvas({ session }: { session: Session }) {
     <canvas
       ref={ref}
       className="house-canvas"
-      width={house.width}
-      height={house.height}
-      aria-label="Pixel art house with seven rooms and five dogs, one of which you can walk around"
+      aria-label="Pixel art house with a patio and a garden, and five dogs, one of which you can walk around"
     />
   )
 }

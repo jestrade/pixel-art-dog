@@ -8,9 +8,15 @@ interface Props {
   onToggleDogs: () => void
 }
 
-/** One button per dog action, plus a run toggle and the breed picker toggle. */
+/** One button per dog action, plus run, zoom in and out of the dog's room, and the breed picker toggle. */
 export function ActionBar({ session, dogsOpen, onToggleDogs }: Props) {
   const [running, setRunning] = useState(false)
+  const [zoomed, setZoomed] = useState(false)
+
+  const zoom = (on: boolean) => {
+    session.setZoom(on)
+    setZoomed(on)
+  }
 
   return (
     <nav className="action-bar" aria-label="Dog actions">
@@ -40,6 +46,28 @@ export function ActionBar({ session, dogsOpen, onToggleDogs }: Props) {
       >
         <span>Run</span>
         <kbd>Shift</kbd>
+      </button>
+      <button
+        type="button"
+        className="action-button"
+        disabled={zoomed}
+        onClick={(e) => {
+          zoom(true)
+          e.currentTarget.blur()
+        }}
+      >
+        <span>Zoom</span>
+      </button>
+      <button
+        type="button"
+        className="action-button"
+        disabled={!zoomed}
+        onClick={(e) => {
+          zoom(false)
+          e.currentTarget.blur()
+        }}
+      >
+        <span>Exit zoom</span>
       </button>
       <button
         type="button"

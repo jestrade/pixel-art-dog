@@ -1,8 +1,8 @@
 # Pixel Pup
 
-A pixel-art browser game where you play with a pet dog. Walk it around a seven-room house with four other dogs, pick every dog's breed, and make yours jump, bark, run, and more.
+A pixel-art browser game where you play with a pet dog. Walk it around a house with a patio and garden, with four other dogs, pick every dog's breed, and make yours jump, bark, run, and more.
 
-> Status: early. You can walk your dog around the seven-room house while four other dogs wander on their own, and you can change every dog's breed. Jump, bark, sit, and wag work from keys and on-screen buttons. The map fills the window without stretching.
+> Status: early. You can walk your dog around the house, patio, and garden while four other dogs wander on their own, and you can change every dog's breed. Jump, bark, sit, and wag work from keys and on-screen buttons. The map fills the window without stretching.
 
 ## Screenshots
 
@@ -15,7 +15,8 @@ A pixel-art browser game where you play with a pet dog. Walk it around a seven-r
 
 ## Concept
 
-- Top-down pixel-art, single-level house with **7 rooms** connected by doorways: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, and entry.
+- Top-down pixel-art, single-level house with **7 rooms** connected by doorways: master bedroom, bathroom, kids' bedroom, living room, kitchen, office, and entry. A back door leads from the kitchen to a **patio**, and a gate from the patio to a **garden**.
+- A **Zoom** button zooms in on the room your dog is in; the view glides to the next room when your dog walks through a doorway, and **Exit zoom** brings back the whole house.
 - You control a dog with the keyboard. Four more dogs wander the house on their own: they walk, run, jump, bark, wag, and sit.
 - A **breed selector** (the Dogs button) lets you pick the breed of every dog, including yours.
 - **Collisions** keep the dog out of walls and furniture, so nothing overlaps.
@@ -61,7 +62,8 @@ src/
 4. ~~Jump, bark, sit, and wag with animations.~~
 5. ~~Action buttons wired to the same actions as the keyboard.~~
 6. ~~Four wandering dogs and a breed selector.~~
-7. Breeds with different shapes (ears, size), more actions, furniture, sounds.
+7. ~~Patio, garden, and a zoom view that follows your dog from room to room.~~
+8. Breeds with different shapes (ears, size), more actions, furniture, sounds.
 
 ## Playing on iPhone or iPad
 

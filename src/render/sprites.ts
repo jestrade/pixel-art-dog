@@ -407,6 +407,115 @@ const frontDoor: Sprite = (c, { x, y, w, h }) => {
   px(c, S.glow, x + w - 9, y + Math.floor(h / 2), 3, 3)
 }
 
+const tree: Sprite = (c, { x, y, w, h }, seed) => {
+  const cx = x + Math.floor(w / 2)
+  const trunkW = Math.max(6, Math.round(w * 0.16))
+  const trunkH = Math.round(h * 0.34)
+  ellipse(c, S.shadow, x + w * 0.15, y + h - 6, w * 0.7, 6)
+  px(c, S.woodDeep, cx - trunkW / 2, y + h - trunkH, trunkW, trunkH - 2)
+  px(c, S.wood, cx - trunkW / 2 + 1, y + h - trunkH, trunkW - 3, trunkH - 3)
+  const canopyH = h - trunkH + 12
+  ellipse(c, S.leafDark, x, y + canopyH * 0.22, w, canopyH * 0.78)
+  ellipse(c, S.leaf, x + 3, y + canopyH * 0.12, w - 8, canopyH * 0.7)
+  ellipse(c, S.leafLight, x + w * 0.22, y + 1, w * 0.5, canopyH * 0.38)
+  for (let i = 0; i < 6; i++) {
+    const fx = x + 6 + Math.floor(hash(seed, i) * (w - 14))
+    const fy = y + 8 + Math.floor(hash(seed, i + 9) * (canopyH * 0.6))
+    px(c, S.dogBedRim, fx, fy, 3, 3) // fruit
+  }
+}
+
+const bush: Sprite = (c, { x, y, w, h }) => {
+  ellipse(c, S.shadow, x + 1, y + h - 4, w - 2, 4)
+  ellipse(c, S.leafDark, x, y + 3, w, h - 4)
+  ellipse(c, S.leaf, x + 2, y + 1, w - 6, h - 6)
+  ellipse(c, S.leafLight, x + 5, y, Math.max(6, w - 16), Math.max(4, h - 14))
+}
+
+const flowerBed: Sprite = (c, { x, y, w, h }, seed) => {
+  const colors = [S.dogBedRim, S.raincoat, S.flowerPink, S.flowerWhite, S.orange]
+  px(c, S.stone, x, y + Math.floor(h / 3), w, h - Math.floor(h / 3))
+  px(c, S.soil, x + 2, y + Math.floor(h / 3) + 2, w - 4, h - Math.floor(h / 3) - 4)
+  for (let fx = x + 4; fx < x + w - 4; fx += 6) {
+    const tall = Math.floor(hash(fx, seed) * 5)
+    px(c, S.leafDark, fx + 1, y + 6 - tall, 1, 8 + tall) // stem
+    px(c, colors[Math.floor(hash(fx, seed + 3) * colors.length)], fx - 1, y + 3 - tall, 4, 4) // bloom
+    px(c, S.raincoatDark, fx, y + 4 - tall, 2, 2)
+  }
+}
+
+const gardenBench: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.woodDark, x + 3, y + 10, 3, h - 12) // legs
+  px(c, S.woodDark, x + w - 6, y + 10, 3, h - 12)
+  px(c, S.woodLight, x, y, w, 4) // backrest
+  px(c, S.wood, x, y + 5, w, 3)
+  px(c, S.woodLight, x, y + 10, w, 5) // seat
+  px(c, S.woodDark, x, y + 15, w, 1)
+}
+
+const doghouse: Sprite = (c, { x, y, w, h }) => {
+  const cx = x + Math.floor(w / 2)
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.wood, x + 3, y + 16, w - 6, h - 18)
+  for (let px0 = x + 7; px0 < x + w - 4; px0 += 6) px(c, S.woodDark, px0, y + 16, 1, h - 18)
+  for (let r = 0; r < 17; r++) {
+    const half = Math.round(((w / 2 + 2) * (r + 1)) / 17)
+    px(c, r > 14 ? S.woodDeep : S.dogBedRim, cx - half, y + r, half * 2, 1) // roof
+  }
+  px(c, S.woodDeep, x + 14, y + 26, w - 28, h - 28)
+  ellipse(c, S.woodDeep, x + 14, y + 22, w - 28, 10)
+  px(c, S.dogBedInner, x + 18, y + h - 5, w - 36, 2) // bowl
+}
+
+const patioSet: Sprite = (c, { x, y, w, h }) => {
+  const cx = x + Math.floor(w / 2)
+  ellipse(c, S.shadow, x + 6, y + h - 6, w - 12, 6)
+  px(c, S.metalDark, cx - 1, y + 18, 2, 30) // umbrella pole
+  ellipse(c, S.orange, x, y, w, 26) // canopy
+  for (let sx = x + 6; sx < x + w - 4; sx += 12) px(c, S.white, sx, y + 4, 5, 18) // stripes
+  ellipse(c, S.doorWoodLight, x + 2, y + 17, w - 4, 8) // canopy rim
+  ellipse(c, S.woodDark, x + 8, y + 44, w - 16, 14) // table
+  ellipse(c, S.woodLight, x + 8, y + 42, w - 16, 12)
+  px(c, S.woodDark, x + 10, y + 53, 3, h - 58)
+  px(c, S.woodDark, x + w - 13, y + 53, 3, h - 58)
+  px(c, S.white, cx - 6, y + 44, 5, 4) // cups
+  px(c, S.pillow, cx + 2, y + 45, 5, 4)
+}
+
+const grill: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.metalDark, x + 4, y + 22, 2, h - 24) // legs
+  px(c, S.metalDark, x + w - 6, y + 22, 2, h - 24)
+  ellipse(c, S.stove, x, y, w, 18) // lid
+  ellipse(c, S.stoveRing, x + 3, y + 2, w - 12, 6)
+  px(c, S.stove, x + 1, y + 13, w - 2, 10)
+  px(c, S.metal, x - 2, y + 9, 5, 2) // handle
+  px(c, S.dogBedRim, x + w - 8, y + 16, 3, 3) // glowing knob
+}
+
+const lounger: Sprite = (c, { x, y, w, h }) => {
+  px(c, S.shadow, x + 2, y + h - 2, w - 4, 2)
+  px(c, S.metalDark, x, y, w, h - 2)
+  px(c, S.cream, x + 2, y + 2, w - 4, h - 6)
+  px(c, S.quiltLight, x + 2, y + 2, w - 4, 12) // headrest
+  for (let sy = y + 18; sy < y + h - 6; sy += 6) px(c, S.creamDark, x + 2, sy, w - 4, 1)
+}
+
+const stonePath: Sprite = (c, { x, y, w, h }, seed) => {
+  for (let sy = y; sy < y + h - 6; sy += 9) {
+    const row = Math.floor((sy - y) / 9)
+    const count = 2 + (row % 2)
+    const slot = w / count
+    for (let i = 0; i < count; i++) {
+      const sw = Math.floor(slot - 5 - hash(seed, row * 5 + i) * 4)
+      const sx = x + i * slot + 2 + Math.floor(hash(row, i + seed) * 3)
+      px(c, S.stoneDark, sx, sy + 3, sw, 5)
+      px(c, S.stone, sx, sy + 1, sw, 5)
+    }
+  }
+}
+
 /** Registry: one drawing function per furniture kind. */
 export const sprites: Record<FurnitureKind, Sprite> = {
   sofa,
@@ -439,4 +548,13 @@ export const sprites: Record<FurnitureKind, Sprite> = {
   desk,
   singleBed,
   frontDoor,
+  tree,
+  bush,
+  flowerBed,
+  gardenBench,
+  doghouse,
+  patioSet,
+  grill,
+  lounger,
+  stonePath,
 }

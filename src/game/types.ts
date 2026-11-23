@@ -37,6 +37,15 @@ export type FurnitureKind =
   | 'desk'
   | 'singleBed'
   | 'frontDoor'
+  | 'tree'
+  | 'bush'
+  | 'flowerBed'
+  | 'gardenBench'
+  | 'doghouse'
+  | 'patioSet'
+  | 'grill'
+  | 'lounger'
+  | 'stonePath'
 
 /** Draw order group: floor items first, then wall decor, then y-sorted objects. */
 export type Layer = 'floor' | 'wall' | 'object'
@@ -51,8 +60,8 @@ export interface Furniture {
   footprint: Rect | null
 }
 
-export type FloorStyle = 'wood' | 'tile' | 'bathTile' | 'carpet'
-export type WallStyle = 'green' | 'blue' | 'cream' | 'teal' | 'rose'
+export type FloorStyle = 'wood' | 'tile' | 'bathTile' | 'carpet' | 'stone' | 'grass'
+export type WallStyle = 'green' | 'blue' | 'cream' | 'teal' | 'rose' | 'brick' | 'fence'
 
 export interface Room {
   id: string
